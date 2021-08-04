@@ -1,0 +1,40 @@
+13 public void test10_6() {
+20 public void test10_5() {
+27 public void test10_4() {
+34 public void test10_3() {
+41 public void test10_2() {
+48 public void test10_1() {
+49 exemplo.Calculadora calculadora0 = new exemplo.Calculadora();
+50 java.lang.Class<?> wildcardClass16 = calculadora0.getClass();
+51 org.junit.Assert.assertNotNull(wildcardClass16);
+52 }
+
+55 public void test10_0() {
+62 public void test09_2() {
+69 public void test09_1() {
+70 exemplo.Calculadora calculadora0 = new exemplo.Calculadora();
+71 boolean boolean5 = calculadora0.isQuadradoPerfeito(0);
+72 org.junit.Assert.assertTrue("'" + boolean5 + "' != '" + true + "'", boolean5 == true);
+73 }
+
+76 public void test09_0() {
+87 public void test08_4() {
+94 public void test08_3() {
+101 public void test08_2() {
+108 public void test08_1() {
+115 public void test08_0() {
+126 public void test07_0() {
+133 public void test06_0() {
+144 public void test05_1() {
+151 public void test05_0() {
+162 public void test04_5() {
+169 public void test04_4() {
+176 public void test04_3() {
+183 public void test04_2() {
+190 public void test04_1() {
+197 public void test04_0() {
+204 public void test03_1() {
+211 public void test03_0() {
+222 public void test02_0() {
+233 public void test01_1() {
+240 public void test01_0() {

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="MyPlugin.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="MyPlugin.commands.category"
+            name="Refactor"
+            id="MyPlugin.commands.sampleCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="splittestplugin.handlers.SplitTestHandler"
+            commandId="MyPlugin.commands.sampleCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="MyPlugin.commands.sampleCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+6">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="MyPlugin.menus.sampleMenu"
+               label="Refactor Plugin"
+               mnemonic="M">
+            <command
+                  commandId="MyPlugin.commands.sampleCommand"
+                  id="MyPlugin.menus.sampleCommand"
+                  mnemonic="S">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="MyPlugin.toolbars.sampleToolbar">
+            <command
+                  id="MyPlugin.toolbars.sampleCommand"
+                  commandId="MyPlugin.commands.sampleCommand"
+                  icon="icons/sample.png"
+                  tooltip="Say hello world">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+
+</plugin>

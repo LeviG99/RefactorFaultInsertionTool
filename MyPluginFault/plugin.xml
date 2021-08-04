@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="sampleBuilder"
+         name="Sample Project Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="mypluginfault.builder.SampleBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="sampleNature"
+         name="Sample Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="mypluginfault.builder.SampleNature">
+         </run>
+      </runtime>
+      <builder
+            id="MyPluginFault.sampleBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="MyPluginFault.sampleNature.category"
+            name="Sample Project Nature commands">
+      </category>
+      <command
+            categoryId="MyPluginFault.sampleNature.category"
+            defaultHandler="mypluginfault.builder.AddRemoveSampleNatureHandler"
+            id="MyPluginFault.addRemoveSampleNature"
+            name="Add/RemoveSample Project Nature">
+      </command>
+      <category
+            id="MyPluginFault.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="MyPluginFault.commands.category"
+            name="Insert Fault"
+            id="MyPluginFault.commands.sampleCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         <command
+               label="Disable Sample builder"
+               commandId="MyPluginFault.addRemoveSampleNature"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <test
+                              property="org.eclipse.core.resources.projectNature"
+                              value="MyPluginFault.sampleNature">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               label="Enable Sample builder"
+               commandId="MyPluginFault.addRemoveSampleNature"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <not>
+                           <test
+                                 property="org.eclipse.core.resources.projectNature"
+                                 value="MyPluginFault.sampleNature">
+                           </test>
+                        </not>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="MyPluginFault.menus.sampleMenu"
+               label="Fault Insertion Plugin"
+               mnemonic="M">
+            <command
+                  commandId="MyPluginFault.commands.sampleCommand"
+                  id="MyPluginFault.menus.sampleCommand"
+                  mnemonic="S">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="MyPluginFault.toolbars.sampleToolbar">
+            <command
+                  id="MyPluginFault.toolbars.sampleCommand"
+                  commandId="MyPluginFault.commands.sampleCommand"
+                  icon="icons/sample.png"
+                  tooltip="Say hello world">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="mypluginfault.handlers.SampleHandler"
+            commandId="MyPluginFault.commands.sampleCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="MyPluginFault.commands.sampleCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+6">
+      </key>
+   </extension>
+
+</plugin>

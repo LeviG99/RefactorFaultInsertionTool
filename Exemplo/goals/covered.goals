@@ -1,0 +1,235 @@
+test01
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora multiplicacao( D D )D 0 Positive
+[INPUT] Calculadora multiplicacao( D D )D 1 Positive
+[METHOD] Calculadora multiplicacao(DD)D
+[OUTPUT] Calculadora multiplicacao(DD)D Positive
+[METHODNOEX] Calculadora multiplicacao(DD)D
+[INPUT] Calculadora divisao( D D )D 0 Positive
+[INPUT] Calculadora divisao( D D )D 1 Zero
+[METHOD] Calculadora divisao(DD)D
+[EXCEPTION] Calculadora divisao(DD)D java.lang.IllegalArgumentException DECLARED
+test02
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora multiplicacao( D D )D 0 Positive
+[INPUT] Calculadora multiplicacao( D D )D 1 Positive
+[METHOD] Calculadora multiplicacao(DD)D
+[OUTPUT] Calculadora multiplicacao(DD)D Positive
+[METHODNOEX] Calculadora multiplicacao(DD)D
+[INPUT] Calculadora potenciacao( D D )D 0 Zero
+[INPUT] Calculadora potenciacao( D D )D 1 Positive
+[METHOD] Calculadora potenciacao(DD)D
+[OUTPUT] Calculadora potenciacao(DD)D Zero
+[METHODNOEX] Calculadora potenciacao(DD)D
+[INPUT] Calculadora divisao( D D )D 0 Positive
+[INPUT] Calculadora divisao( D D )D 1 Positive
+[METHOD] Calculadora divisao(DD)D
+[OUTPUT] Calculadora divisao(DD)D Positive
+[METHODNOEX] Calculadora divisao(DD)D
+[INPUT] Calculadora radiciacao( D D )D 0 Negative
+[INPUT] Calculadora radiciacao( D D )D 1 Zero
+[METHOD] Calculadora radiciacao(DD)D
+[EXCEPTION] Calculadora radiciacao(DD)D java.lang.IllegalArgumentException DECLARED
+test03
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora multiplicacao( D D )D 0 Positive
+[INPUT] Calculadora multiplicacao( D D )D 1 Positive
+[METHOD] Calculadora multiplicacao(DD)D
+[OUTPUT] Calculadora multiplicacao(DD)D Positive
+[METHODNOEX] Calculadora multiplicacao(DD)D
+[INPUT] Calculadora potenciacao( D D )D 0 Zero
+[INPUT] Calculadora potenciacao( D D )D 1 Positive
+[METHOD] Calculadora potenciacao(DD)D
+[OUTPUT] Calculadora potenciacao(DD)D Zero
+[METHODNOEX] Calculadora potenciacao(DD)D
+[INPUT] Calculadora subtracao( D D )D 0 Positive
+[INPUT] Calculadora subtracao( D D )D 1 Zero
+[METHOD] Calculadora subtracao(DD)D
+[OUTPUT] Calculadora subtracao(DD)D Positive
+[METHODNOEX] Calculadora subtracao(DD)D
+[INPUT] Calculadora radiciacao( D D )D 0 Positive
+[INPUT] Calculadora radiciacao( D D )D 1 Zero
+[METHOD] Calculadora radiciacao(DD)D
+[EXCEPTION] Calculadora radiciacao(DD)D java.lang.IllegalArgumentException DECLARED
+test04
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora multiplicacao( D D )D 0 Positive
+[INPUT] Calculadora multiplicacao( D D )D 1 Positive
+[METHOD] Calculadora multiplicacao(DD)D
+[OUTPUT] Calculadora multiplicacao(DD)D Positive
+[METHODNOEX] Calculadora multiplicacao(DD)D
+[INPUT] Calculadora potenciacao( D D )D 0 Zero
+[INPUT] Calculadora potenciacao( D D )D 1 Positive
+[METHOD] Calculadora potenciacao(DD)D
+[OUTPUT] Calculadora potenciacao(DD)D Zero
+[METHODNOEX] Calculadora potenciacao(DD)D
+[INPUT] Calculadora divisao( D D )D 0 Positive
+[INPUT] Calculadora divisao( D D )D 1 Positive
+[METHOD] Calculadora divisao(DD)D
+[OUTPUT] Calculadora divisao(DD)D Positive
+[METHODNOEX] Calculadora divisao(DD)D
+[INPUT] Calculadora radiciacao( D D )D 0 Positive
+[INPUT] Calculadora radiciacao( D D )D 1 Negative
+[METHOD] Calculadora radiciacao(DD)D
+[OUTPUT] Calculadora radiciacao(DD)D Positive
+[METHODNOEX] Calculadora radiciacao(DD)D
+[INPUT] Calculadora divisao( D D )D 0 Positive
+[INPUT] Calculadora divisao( D D )D 1 Negative
+[METHOD] Calculadora divisao(DD)D
+[OUTPUT] Calculadora divisao(DD)D Negative
+[METHODNOEX] Calculadora divisao(DD)D
+[INPUT] Calculadora multiplicacao( D D )D 0 Negative
+[INPUT] Calculadora multiplicacao( D D )D 1 Positive
+[METHOD] Calculadora multiplicacao(DD)D
+[OUTPUT] Calculadora multiplicacao(DD)D Negative
+[METHODNOEX] Calculadora multiplicacao(DD)D
+test05
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora radiciacao( D D )D 0 Positive
+[INPUT] Calculadora radiciacao( D D )D 1 Negative
+[METHOD] Calculadora radiciacao(DD)D
+[OUTPUT] Calculadora radiciacao(DD)D Positive
+[METHODNOEX] Calculadora radiciacao(DD)D
+[INPUT] Calculadora subtracao( D D )D 0 Positive
+[INPUT] Calculadora subtracao( D D )D 1 Negative
+[METHOD] Calculadora subtracao(DD)D
+[OUTPUT] Calculadora subtracao(DD)D Positive
+[METHODNOEX] Calculadora subtracao(DD)D
+[INPUT] Calculadora radiciacao( D D )D 0 Positive
+[INPUT] Calculadora radiciacao( D D )D 1 Zero
+[METHOD] Calculadora radiciacao(DD)D
+[EXCEPTION] Calculadora radiciacao(DD)D java.lang.IllegalArgumentException DECLARED
+test06
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora potenciacao( D D )D 0 Positive
+[INPUT] Calculadora potenciacao( D D )D 1 Positive
+[METHOD] Calculadora potenciacao(DD)D
+[OUTPUT] Calculadora potenciacao(DD)D Positive
+[METHODNOEX] Calculadora potenciacao(DD)D
+[INPUT] Calculadora divisao( D D )D 0 Zero
+[INPUT] Calculadora divisao( D D )D 1 Positive
+[METHOD] Calculadora divisao(DD)D
+[OUTPUT] Calculadora divisao(DD)D Zero
+[METHODNOEX] Calculadora divisao(DD)D
+[INPUT] Calculadora radiciacao( D D )D 0 Positive
+[INPUT] Calculadora radiciacao( D D )D 1 Zero
+[METHOD] Calculadora radiciacao(DD)D
+[EXCEPTION] Calculadora radiciacao(DD)D java.lang.IllegalArgumentException DECLARED
+test07
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora soma( D D )D 0 Negative
+[INPUT] Calculadora soma( D D )D 1 Zero
+[METHOD] Calculadora soma(DD)D
+[OUTPUT] Calculadora soma(DD)D Negative
+[METHODNOEX] Calculadora soma(DD)D
+[INPUT] Calculadora subtracao( D D )D 0 Positive
+[INPUT] Calculadora subtracao( D D )D 1 Negative
+[METHOD] Calculadora subtracao(DD)D
+[OUTPUT] Calculadora subtracao(DD)D Positive
+[METHODNOEX] Calculadora subtracao(DD)D
+[INPUT] Calculadora radiciacao( D D )D 0 Zero
+[INPUT] Calculadora radiciacao( D D )D 1 Negative
+[METHOD] Calculadora radiciacao(DD)D
+[OUTPUT] Calculadora radiciacao(DD)D Zero
+[METHODNOEX] Calculadora radiciacao(DD)D
+[INPUT] Calculadora divisao( D D )D 0 Zero
+[INPUT] Calculadora divisao( D D )D 1 Negative
+[METHOD] Calculadora divisao(DD)D
+[OUTPUT] Calculadora divisao(DD)D Zero
+[METHODNOEX] Calculadora divisao(DD)D
+[INPUT] Calculadora multiplicacao( D D )D 0 Positive
+[INPUT] Calculadora multiplicacao( D D )D 1 Positive
+[METHOD] Calculadora multiplicacao(DD)D
+[OUTPUT] Calculadora multiplicacao(DD)D Positive
+[METHODNOEX] Calculadora multiplicacao(DD)D
+[INPUT] Calculadora potenciacao( D D )D 0 Positive
+[INPUT] Calculadora potenciacao( D D )D 1 Positive
+[METHOD] Calculadora potenciacao(DD)D
+[OUTPUT] Calculadora potenciacao(DD)D Positive
+[METHODNOEX] Calculadora potenciacao(DD)D
+test08
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora potenciacao( D D )D 0 Positive
+[INPUT] Calculadora potenciacao( D D )D 1 Positive
+[METHOD] Calculadora potenciacao(DD)D
+[OUTPUT] Calculadora potenciacao(DD)D Positive
+[METHODNOEX] Calculadora potenciacao(DD)D
+[INPUT] Calculadora divisao( D D )D 0 Zero
+[INPUT] Calculadora divisao( D D )D 1 Positive
+[METHOD] Calculadora divisao(DD)D
+[OUTPUT] Calculadora divisao(DD)D Zero
+[METHODNOEX] Calculadora divisao(DD)D
+[INPUT] Calculadora isQuadradoPerfeito( I )Z 0 Zero
+[METHOD] Calculadora isQuadradoPerfeito(I)Z
+[OUTPUT] Calculadora isQuadradoPerfeito(I)Z True
+[METHODNOEX] Calculadora isQuadradoPerfeito(I)Z
+[INPUT] Calculadora toHex( D )Ljava/lang/String; 0 Negative
+[METHOD] Calculadora toHex(D)Ljava/lang/String;
+[OUTPUT] Calculadora toHex(D)Ljava/lang/String; NonNull
+[METHODNOEX] Calculadora toHex(D)Ljava/lang/String;
+[INPUT] Calculadora potenciacao( D D )D 0 Positive
+[INPUT] Calculadora potenciacao( D D )D 1 Negative
+[METHOD] Calculadora potenciacao(DD)D
+[OUTPUT] Calculadora potenciacao(DD)D Zero
+[METHODNOEX] Calculadora potenciacao(DD)D
+[INPUT] Calculadora radiciacao( D D )D 0 Negative
+[INPUT] Calculadora radiciacao( D D )D 1 Zero
+[METHOD] Calculadora radiciacao(DD)D
+[EXCEPTION] Calculadora radiciacao(DD)D java.lang.IllegalArgumentException DECLARED
+test09
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora radiciacao( D D )D 0 Positive
+[INPUT] Calculadora radiciacao( D D )D 1 Negative
+[METHOD] Calculadora radiciacao(DD)D
+[OUTPUT] Calculadora radiciacao(DD)D Positive
+[METHODNOEX] Calculadora radiciacao(DD)D
+[INPUT] Calculadora isQuadradoPerfeito( I )Z 0 Zero
+[METHOD] Calculadora isQuadradoPerfeito(I)Z
+[OUTPUT] Calculadora isQuadradoPerfeito(I)Z True
+[METHODNOEX] Calculadora isQuadradoPerfeito(I)Z
+[INPUT] Calculadora radiciacao( D D )D 0 Positive
+[INPUT] Calculadora radiciacao( D D )D 1 Zero
+[METHOD] Calculadora radiciacao(DD)D
+[EXCEPTION] Calculadora radiciacao(DD)D java.lang.IllegalArgumentException DECLARED
+test10
+[METHOD] Calculadora <init>()V
+[METHODNOEX] Calculadora <init>()V
+[INPUT] Calculadora soma( D D )D 0 Negative
+[INPUT] Calculadora soma( D D )D 1 Zero
+[METHOD] Calculadora soma(DD)D
+[OUTPUT] Calculadora soma(DD)D Negative
+[METHODNOEX] Calculadora soma(DD)D
+[INPUT] Calculadora subtracao( D D )D 0 Positive
+[INPUT] Calculadora subtracao( D D )D 1 Negative
+[METHOD] Calculadora subtracao(DD)D
+[OUTPUT] Calculadora subtracao(DD)D Positive
+[METHODNOEX] Calculadora subtracao(DD)D
+[INPUT] Calculadora radiciacao( D D )D 0 Zero
+[INPUT] Calculadora radiciacao( D D )D 1 Negative
+[METHOD] Calculadora radiciacao(DD)D
+[OUTPUT] Calculadora radiciacao(DD)D Zero
+[METHODNOEX] Calculadora radiciacao(DD)D
+[INPUT] Calculadora divisao( D D )D 0 Zero
+[INPUT] Calculadora divisao( D D )D 1 Negative
+[METHOD] Calculadora divisao(DD)D
+[OUTPUT] Calculadora divisao(DD)D Zero
+[METHODNOEX] Calculadora divisao(DD)D
+[INPUT] Calculadora multiplicacao( D D )D 0 Positive
+[INPUT] Calculadora multiplicacao( D D )D 1 Positive
+[METHOD] Calculadora multiplicacao(DD)D
+[OUTPUT] Calculadora multiplicacao(DD)D Positive
+[METHODNOEX] Calculadora multiplicacao(DD)D
+[INPUT] Calculadora potenciacao( D D )D 0 Positive
+[INPUT] Calculadora potenciacao( D D )D 1 Negative
+[METHOD] Calculadora potenciacao(DD)D
+[OUTPUT] Calculadora potenciacao(DD)D Zero
+[METHODNOEX] Calculadora potenciacao(DD)D
