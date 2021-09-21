@@ -26,11 +26,11 @@ public class ReturnVisitor extends ASTVisitor {
     @Override
     public boolean visit(ReturnStatement node) {
 		if (node instanceof ReturnStatement) {
+			System.out.println(node.toString());
+			System.out.println(code);
 			if(check && node.toString().equals(code)) {
     		node.setExpression(util.changeValue(node,type));
 			}
-			System.out.println(node);
-			System.out.println(node.getExpression());
 
 			if(util.counter(node)){
     		names.add(node);

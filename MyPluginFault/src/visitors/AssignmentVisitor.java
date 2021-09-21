@@ -13,7 +13,8 @@ import org.eclipse.jdt.core.dom.TryStatement;
 public class AssignmentVisitor extends ASTVisitor {
     private List<ExpressionStatement> assignments = new ArrayList<>();
     private String variableName;
-    
+    private VisitorUtil util = new VisitorUtil();
+
     public AssignmentVisitor(String name) {
     	super();
     	variableName = name;
@@ -26,7 +27,7 @@ public class AssignmentVisitor extends ASTVisitor {
     	
     	Iterator<SimpleName> namesIt = simpleNameVisitor.getNames().iterator();
     	
-    	while(namesIt.hasNext()) {
+    	while(namesIt.hasNext()&& util.counter(node)) {
     		if(namesIt.next().toString().equals(variableName) && !(node.getParent().getParent() instanceof TryStatement)) {
     			assignments.add((ExpressionStatement)node.getParent());
     			break;

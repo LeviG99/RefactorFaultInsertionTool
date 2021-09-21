@@ -21,11 +21,10 @@ public class VariableDeclarationStatementVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(VariableDeclarationStatement node) {
+    	System.out.println(node);
     	VariableDeclarationFragmentVisitor fragmentVisitor = new VariableDeclarationFragmentVisitor();
     	node.accept(fragmentVisitor);
-    	System.out.println(node);
     	Iterator<VariableDeclarationFragment> fragmentsIt = fragmentVisitor.getDeclarationFragments().iterator();
-    	
     	while(fragmentsIt.hasNext()) {
     		if(fragmentsIt.next().getName().toString().equals(variableName) && !(node.getParent().getParent() instanceof TryStatement) && util.counter(node) ) {
     			variableDeclarationStatements.add(node);

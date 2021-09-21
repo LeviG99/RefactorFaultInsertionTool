@@ -31,18 +31,23 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
+import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.internal.corext.refactoring.code.ExtractMethodRefactoring;
@@ -58,6 +63,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.junit.runner.JUnitCore;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
+import org.eclipse.jdt.core.dom.SimpleType;
 
 import visitors.AssertVisitor;
 import visitors.AssignmentVisitor;
@@ -67,6 +73,7 @@ import visitors.MethodDeclarationVisitor;
 import visitors.MethodInvocationStatementVisitor;
 import visitors.ReturnVisitor;
 import visitors.SimpleNameVisitor;
+import visitors.SwitchVisitor;
 import visitors.TryStatementVisitor;
 import visitors.VariableDeclarationStatementVisitor;
 import visitors.WhileVisitor;
@@ -77,6 +84,8 @@ public class SampleHandler extends AbstractHandler {
 	//Fault Type 1 = change return value, Fault Type 2 = remove last statement, if possible
 	//escolher local aleatorio para realizar a inserção.
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		//tratar throws
+		//tratar erro com entrada primitiva, tratar erro com override
 		Scanner s = new Scanner(System.in);
 		String projectName = "Exemplo";
 		System.out.println("Digite o Nome Do Metodo a ser alterado");
@@ -92,9 +101,11 @@ public class SampleHandler extends AbstractHandler {
 
 		try {
 			IProject project = jproject.getProject();
-			IFolder folder = project.getFolder("test");
-			IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(folder);
+			
 
+			IFolder folder = project.getFolder("test");
+			//IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(project.getFullPath().toString());
+			IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(folder);
 			IPackageFragment packageFragment = packageFragmenteRoot.createPackageFragment("exemplo", true, null);
 			//Classe
 			ICompilationUnit unit = packageFragment.getCompilationUnit("Example2.java");
@@ -124,7 +135,6 @@ public class SampleHandler extends AbstractHandler {
 				if(methodNameOriginal.equals(testName)) {
 				List<ASTNode> nodesA = new ArrayList<ASTNode>();
 				nodesA.add(testMethod.getBody());
-				
 				Iterator<ASTNode> assertIt = nodesA.iterator();
 //							
 //				//Abordagem 1 
@@ -133,6 +143,24 @@ public class SampleHandler extends AbstractHandler {
 				// Abordagem2
 				MethodDeclaration newMethod = astRoot.getAST().newMethodDeclaration();
 				newMethod.setBody(astRoot.getAST().newBlock());
+				SingleVariableDeclaration p;
+				SimpleType e;
+				for(int eindex = 0;eindex < testMethod.thrownExceptionTypes().size();eindex++) {
+					e = (SimpleType) (testMethod.thrownExceptionTypes().get(eindex));
+					newMethod.thrownExceptionTypes().add(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(e.getName().toString())));
+				}
+				for(int pindex = 0; pindex < testMethod.parameters().size();pindex++) {
+					p = (SingleVariableDeclaration) testMethod.parameters().get(pindex);
+					SingleVariableDeclaration np = astRoot.getAST().newSingleVariableDeclaration();
+					np.setInitializer(p.getInitializer());
+					//np.setType(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(p.getType().toString())));
+					if(p.getType().isPrimitiveType())
+						np.setType(astRoot.getAST().newPrimitiveType(((PrimitiveType) p.getType()).getPrimitiveTypeCode()));
+					else
+					np.setType(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(p.getType().toString())));
+					np.setName(astRoot.getAST().newSimpleName(p.getName().toString()));
+					newMethod.parameters().add(np);
+				}
 				if(testMethod.getReturnType2() != null) {
 				if(testMethod.getReturnType2().isPrimitiveType()) {
 					if(testMethod.getReturnType2().toString().equals("int")) {
@@ -152,12 +180,27 @@ public class SampleHandler extends AbstractHandler {
 					}else if(testMethod.getReturnType2().toString().equals("short")) {
 						newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.SHORT));	
 					}
-				}else newMethod.setReturnType2(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(testMethod.getReturnType2().toString())));
+				}else {
+					Type type = testMethod.getReturnType2();
+					newMethod.setReturnType2(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(testMethod.getReturnType2().toString())));
+					
+				}
 				}
 				Modifier m;
+				MarkerAnnotation n;
 				for(int mindex = 0; mindex < testMethod.modifiers().size();mindex++) {
+					if(testMethod.modifiers().get(mindex)instanceof MarkerAnnotation) {
+						n = (MarkerAnnotation) testMethod.modifiers().get(mindex);
+						System.out.println(n.getTypeName());
+						MarkerAnnotation nnew = astRoot.getAST().newMarkerAnnotation();
+						nnew.setTypeName(n.getAST().newName(n.getTypeName().toString()));
+						newMethod.modifiers().add(nnew);
+
+					}
+					else if(testMethod.modifiers().get(mindex)instanceof Modifier) {
 					m = (Modifier) testMethod.modifiers().get(mindex);
 					newMethod.modifiers().add(astRoot.getAST().newModifier(m.getKeyword()));
+					}
 				}
 				newMethod.setConstructor(false);
 				newMethod.setName(astRoot.getAST().newSimpleName(testName + "_reordered"));
@@ -193,6 +236,8 @@ public class SampleHandler extends AbstractHandler {
 						testMethod.accept(forVisitor);
 						ReturnVisitor returns = new ReturnVisitor(variableName,fault==1, line + "\n", testMethod.getReturnType2());
 						testMethod.accept(returns);
+						SwitchVisitor switchs = new SwitchVisitor();
+						testMethod.accept(switchs);
 						List<ASTNode> nodes = new ArrayList();
 						nodes.addAll(declarations.getDeclarations());
 						nodes.addAll(assigmentVisitor.getAssignments());
@@ -201,6 +246,7 @@ public class SampleHandler extends AbstractHandler {
 						nodes.addAll(whileVisitor.getNames());
 						nodes.addAll(forVisitor.getNames());
 						nodes.addAll(returns.getNames());
+						nodes.addAll(switchs.getSwitchStatements());
 						for (ASTNode node : nodes) {
 							newTestNodes.add(node);
 
@@ -226,7 +272,6 @@ public class SampleHandler extends AbstractHandler {
 
 						Block block = newMethod.getBody();
 						ListRewrite listBlockRewrite = rewriter.getListRewrite(block, Block.STATEMENTS_PROPERTY);
-						System.out.println(nodesOrdered.size());
 						//Talvez Expression, se não, utilizar toStrings
 						//Procurar no nó anterior ao return, instancias de variáveis utilizadas no return
 						for (int nindex = 0;nindex < nodesOrdered.size();nindex++) {
@@ -238,7 +283,17 @@ public class SampleHandler extends AbstractHandler {
 							}
 							//checar pela formatação de string se é declaration, se não, ir pra cima e checar se os filhos possuem return ou declaration
 							else if((nodesOrdered.get(nindex) instanceof ReturnStatement)) {
-								//if(nodesOrdered.get(nindex-1) instanceof ExpressionStatement || nodesOrdered.get(nindex - 1) instanceof MethodInvocationStatement)
+								if(nodesOrdered.get(nindex-1) instanceof VariableDeclarationStatement) {
+									//testar declarações com qualificadores(this,super)
+									String fragment = ((VariableDeclarationStatement) nodesOrdered.get(nindex-1)).fragments().get(0).toString();
+									int fragi = fragment.indexOf("=");
+									String fragsub = fragment.substring(0, fragi);
+									String expressionStr = ((ReturnStatement) nodesOrdered.get(nindex)).getExpression().toString();
+									if(expressionStr.equals(fragsub)) {
+										listBlockRewrite.insertLast(nodesOrdered.get(nindex), null);
+										break;
+									}
+								}
 								listBlockRewrite.remove(nodesOrdered.get(nindex-1), null);
 								listBlockRewrite.insertLast(nodesOrdered.get(nindex), null);
 							}
@@ -254,7 +309,7 @@ public class SampleHandler extends AbstractHandler {
 				}
 				// Abordagem 2
 				//listMethodRewrite.insertLast(newMethod2, null);
-				listMethodRewrite.insertLast(newMethod, null);
+				listMethodRewrite.insertAfter(newMethod, testMethod, null);
 
 				// ---------------------------------
 

@@ -23,13 +23,12 @@ public class AssignmentVisitor extends ASTVisitor {
 
     public boolean visit(Assignment node) {
     	SimpleNameVisitor simpleNameVisitor = new SimpleNameVisitor();
-    	
     	node.getLeftHandSide().accept(simpleNameVisitor);
     	
     	Iterator<SimpleName> namesIt = simpleNameVisitor.getNames().iterator();
     	
-    	while(namesIt.hasNext() && util.counter(node)) {
-    		if(namesIt.next().toString().equals(variableName) && !(node.getParent().getParent() instanceof TryStatement)) {
+    	while(namesIt.hasNext()) {
+    		if(namesIt.next().toString().equals(variableName) && !(node.getParent().getParent() instanceof TryStatement)&& util.counter(node.getParent())) {
     			assignments.add((ExpressionStatement)node.getParent());
     			break;
     		}

@@ -12,7 +12,8 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 public class VariableDeclarationStatementVisitor extends ASTVisitor {
     private List<VariableDeclarationStatement> variableDeclarationStatements = new ArrayList<>();
     private String variableName;
-    
+    private VisitorUtil util = new VisitorUtil();
+
     public VariableDeclarationStatementVisitor(String name) {
     	super();
     	variableName = name;
@@ -22,11 +23,9 @@ public class VariableDeclarationStatementVisitor extends ASTVisitor {
     public boolean visit(VariableDeclarationStatement node) {
     	VariableDeclarationFragmentVisitor fragmentVisitor = new VariableDeclarationFragmentVisitor();
     	node.accept(fragmentVisitor);
-    	
     	Iterator<VariableDeclarationFragment> fragmentsIt = fragmentVisitor.getDeclarationFragments().iterator();
-    	
     	while(fragmentsIt.hasNext()) {
-    		if(fragmentsIt.next().getName().toString().equals(variableName) && !(node.getParent().getParent() instanceof TryStatement)) {
+    		if(fragmentsIt.next().getName().toString().equals(variableName) && !(node.getParent().getParent() instanceof TryStatement) && util.counter(node) ) {
     			variableDeclarationStatements.add(node);
     			break;
     		}

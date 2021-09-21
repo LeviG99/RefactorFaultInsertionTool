@@ -13,7 +13,6 @@ public class VariableDeclarationFragmentVisitor extends ASTVisitor {
 	    @Override
 	    public boolean visit(VariableDeclarationFragment node) {
 	    	variableDeclarationsFragments.add(node);
-	    	System.out.println(node);
 	    	return super.visit(node);
 	    }
 

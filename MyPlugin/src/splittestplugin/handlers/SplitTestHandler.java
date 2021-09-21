@@ -28,17 +28,21 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -65,6 +69,7 @@ import visitors.MethodDeclarationVisitor;
 import visitors.MethodInvocationStatementVisitor;
 import visitors.ReturnVisitor;
 import visitors.SimpleNameVisitor;
+import visitors.SwitchVisitor;
 import visitors.TryStatementVisitor;
 import visitors.VariableDeclarationStatementVisitor;
 import visitors.WhileVisitor;
@@ -73,6 +78,7 @@ public class SplitTestHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Scanner s = new Scanner(System.in);
+		//String projectName = "TrackingThings1";
 		String projectName = "Exemplo";
 		String methodNameOriginal = s.nextLine();
 		int start = s.nextInt() - 1;
@@ -85,9 +91,11 @@ public class SplitTestHandler extends AbstractHandler {
 
 		try {
 			IProject project = jproject.getProject();
-			IFolder folder = project.getFolder("test");
-			IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(folder);
+			
 
+			IFolder folder = project.getFolder("test");
+			//IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(project.getFullPath().toString());
+			IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(folder);
 			IPackageFragment packageFragment = packageFragmenteRoot.createPackageFragment("exemplo", true, null);
 			//Classe
 			ICompilationUnit unit = packageFragment.getCompilationUnit("Example2.java");
@@ -118,7 +126,6 @@ public class SplitTestHandler extends AbstractHandler {
 				if(methodNameOriginal.equals(testName)) {
 				List<ASTNode> nodesA = new ArrayList<ASTNode>();
 				nodesA.add(testMethod.getBody());
-				
 				Iterator<ASTNode> assertIt = nodesA.iterator();
 //							
 //				//Abordagem 1 
@@ -127,34 +134,70 @@ public class SplitTestHandler extends AbstractHandler {
 				// Abordagem2
 				MethodDeclaration newMethod = astRoot.getAST().newMethodDeclaration();
 				newMethod.setBody(astRoot.getAST().newBlock());
+				SingleVariableDeclaration p;
+				SimpleType e;
+				for(int eindex = 0;eindex < testMethod.thrownExceptionTypes().size();eindex++) {
+					e = (SimpleType) (testMethod.thrownExceptionTypes().get(eindex));
+					newMethod.thrownExceptionTypes().add(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(e.getName().toString())));
+				}
+				for(int pindex = 0; pindex < testMethod.parameters().size();pindex++) {
+					p = (SingleVariableDeclaration) testMethod.parameters().get(pindex);
+					SingleVariableDeclaration np = astRoot.getAST().newSingleVariableDeclaration();
+					np.setInitializer(p.getInitializer());
+					//np.setType(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(p.getType().toString())));
+					if(p.getType().isPrimitiveType())
+						np.setType(astRoot.getAST().newPrimitiveType(((PrimitiveType) p.getType()).getPrimitiveTypeCode()));
+					else
+					np.setType(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(p.getType().toString())));
+					np.setName(astRoot.getAST().newSimpleName(p.getName().toString()));
+					newMethod.parameters().add(np);
+				}
 				if(testMethod.getReturnType2() != null) {
-					if(testMethod.getReturnType2().isPrimitiveType()) {
-						if(testMethod.getReturnType2().toString().equals("int")) {
-							newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.INT));		
-						}else if(testMethod.getReturnType2().toString().equals("char")) {
-							newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.CHAR));		
-						}else if(testMethod.getReturnType2().toString().equals("byte")) {
-							newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.BYTE));		
-						}else if(testMethod.getReturnType2().toString().equals("float")) {
-							newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.FLOAT));		
-						}else if(testMethod.getReturnType2().toString().equals("long")) {
-							newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.LONG));		
-						}else if(testMethod.getReturnType2().toString().equals("boolean")) {
-							newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.BOOLEAN));		
-						}
-					}else newMethod.setReturnType2(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(testMethod.getReturnType2().toString())));
+				if(testMethod.getReturnType2().isPrimitiveType()) {
+					if(testMethod.getReturnType2().toString().equals("int")) {
+						newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.INT));		
+					}else if(testMethod.getReturnType2().toString().equals("char")) {
+						newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.CHAR));		
+					}else if(testMethod.getReturnType2().toString().equals("byte")) {
+						newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.BYTE));		
+					}else if(testMethod.getReturnType2().toString().equals("float")) {
+						newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.FLOAT));		
+					}else if(testMethod.getReturnType2().toString().equals("long")) {
+						newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.LONG));		
+					}else if(testMethod.getReturnType2().toString().equals("boolean")) {
+						newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.BOOLEAN));	
+					}else if(testMethod.getReturnType2().toString().equals("double")) {
+						newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.DOUBLE));		
+					}else if(testMethod.getReturnType2().toString().equals("short")) {
+						newMethod.setReturnType2(astRoot.getAST().newPrimitiveType(PrimitiveType.SHORT));	
 					}
+				}else {
+					Type type = testMethod.getReturnType2();
+					newMethod.setReturnType2(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(testMethod.getReturnType2().toString())));
+					
+				}
+				}
 				Modifier m;
+				MarkerAnnotation n;
 				for(int mindex = 0; mindex < testMethod.modifiers().size();mindex++) {
+					if(testMethod.modifiers().get(mindex)instanceof MarkerAnnotation) {
+						n = (MarkerAnnotation) testMethod.modifiers().get(mindex);
+						System.out.println(n.getTypeName());
+						MarkerAnnotation nnew = astRoot.getAST().newMarkerAnnotation();
+						nnew.setTypeName(n.getAST().newName(n.getTypeName().toString()));
+						newMethod.modifiers().add(nnew);
+
+					}
+					else if(testMethod.modifiers().get(mindex)instanceof Modifier) {
 					m = (Modifier) testMethod.modifiers().get(mindex);
 					newMethod.modifiers().add(astRoot.getAST().newModifier(m.getKeyword()));
+					}
 				}
-				System.out.println(newMethod.modifiers());
 				newMethod.setConstructor(false);
 				newMethod.setName(astRoot.getAST().newSimpleName(testName + "_reordered"));
 				while (assertIt.hasNext()) {
 					Set<ASTNode> newTestNodes = new HashSet<ASTNode>();
-					
+
 					ASTNode assertStatement = assertIt.next();
 
 					SimpleNameVisitor simpleNameVisitor = new SimpleNameVisitor();
@@ -184,6 +227,8 @@ public class SplitTestHandler extends AbstractHandler {
 						testMethod.accept(forVisitor);
 						ReturnVisitor returns = new ReturnVisitor(variableName);
 						testMethod.accept(returns);
+						SwitchVisitor switchs = new SwitchVisitor();
+						testMethod.accept(switchs);
 						List<ASTNode> nodes = new ArrayList();
 						nodes.addAll(declarations.getDeclarations());
 						nodes.addAll(assigmentVisitor.getAssignments());
@@ -192,6 +237,7 @@ public class SplitTestHandler extends AbstractHandler {
 						nodes.addAll(whileVisitor.getNames());
 						nodes.addAll(forVisitor.getNames());
 						nodes.addAll(returns.getNames());
+						nodes.addAll(switchs.getSwitchStatements());
 						for (ASTNode node : nodes) {
 							newTestNodes.add(node);
 
@@ -229,12 +275,11 @@ public class SplitTestHandler extends AbstractHandler {
 				}
 				// Abordagem 2
 				//listMethodRewrite.insertLast(newMethod2, null);
-				listMethodRewrite.insertLast(newMethod, null);
+				listMethodRewrite.insertAfter(newMethod, testMethod, null);
 
 				// ---------------------------------
 
 				listMethodRewrite.remove(testMethod, null);
-
 			}
 				
 			}
@@ -280,7 +325,7 @@ public class SplitTestHandler extends AbstractHandler {
 						if(!isTestInvocationStatement || isLastStatement ) {
 							if(length == 0) {
 								length = statement.getStartPosition() + statement.getLength();
-							}
+							} 
 								if (isLastStatement || isAssertStatement) {
 									if(isLastStatement && !isTestInvocationStatement) {
 										initial = statement.getStartPosition();
@@ -299,7 +344,8 @@ public class SplitTestHandler extends AbstractHandler {
 								}
 								initial = statement.getStartPosition();
 							
-						}
+						
+					}
 					}
 					}
 					

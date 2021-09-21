@@ -24,14 +24,14 @@ public class MethodInvocationStatementVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(MethodInvocation node) {
-		if (node.getParent() instanceof ExpressionStatement && util.counter(node)) {
+		if (node.getParent() instanceof ExpressionStatement) {
 			SimpleNameVisitor simpleNameVisitor = new SimpleNameVisitor();
 
 			node.accept(simpleNameVisitor);
 
 			Iterator<SimpleName> namesIt = simpleNameVisitor.getNames().iterator();
 
-			while (namesIt.hasNext()) {
+			while (namesIt.hasNext() && util.counter(node.getParent())) {
 				if (namesIt.next().toString().equals(variableName) && !(node.getParent().getParent() instanceof TryStatement)) {
 					methodInvocations.add((ExpressionStatement) node.getParent());
 					break;

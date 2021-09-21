@@ -15,7 +15,6 @@ public class VisitorUtil {
     		i++;
     		node = node.getParent();
     		if(node instanceof MethodDeclaration) {
-    			System.out.println("Found Method at "+ i);
     			break;
     		}
     	}

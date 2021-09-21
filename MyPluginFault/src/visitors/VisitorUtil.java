@@ -1,7 +1,11 @@
 package visitors;
 
+import javax.transaction.xa.Xid;
+
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.BooleanLiteral;
+import org.eclipse.jdt.core.dom.CharacterLiteral;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -33,16 +37,34 @@ public class VisitorUtil {
 		}
 		String typeString = type.toString();
 		if(typeString.equals("String")) {
-			if(node.getExpression().toString().isEmpty()) return node.getAST().newStringLiteral();
-			else {
-				StringLiteral x = node.getAST().newStringLiteral();
-				x.setLiteralValue("_");
-				return x;
+			StringLiteral x = node.getAST().newStringLiteral();
+			x.setLiteralValue("_");
+			if(node.getExpression().toString().equals(x.toString())) {
+				x.setLiteralValue("1");
 			}
+			return x;
+			
 		}
-		else if(typeString.equals("Integer")||typeString.equals("int") ) {
-			if(node.getExpression().toString().equals("1")) {
+		else if(typeString.equals("char")) {
+			CharacterLiteral x = node.getAST().newCharacterLiteral();
+			x.setCharValue('_');
+			if(node.getExpression().toString().equals(x.toString())) {
+				x.setCharValue('1');
+			}
+			return x;
+			
+		}else if(typeString.equals("boolean")) {
+			BooleanLiteral x = node.getAST().newBooleanLiteral(false);
+			if(node.getExpression().toString().equals(x.toString())) {
+				x.setBooleanValue(true);
+			}
+			return x;
+		}
+		else if(typeString.equals("Integer")||typeString.equals("int")||typeString.equals("float")
+				||typeString.equals("short")||typeString.equals("byte")||typeString.equals("double") || typeString.equals("long")) {
+			if(node.getExpression().toString().equals("1")|| node.getExpression().toString().equals("1.0")) {
 			NumberLiteral xI = node.getAST().newNumberLiteral();
+			//trocar valores 2 por -1
 			xI.setToken("2");
 			return xI;
 			}else {
@@ -52,7 +74,7 @@ public class VisitorUtil {
 			}
 		}
 		else {
-			if(!node.getExpression().toString().equals("null")) return node.getAST().newReturnStatement().getExpression();
+			if(!node.getExpression().toString().equals("null")) return node.getAST().newNullLiteral();
 			else return node.getAST().newNullLiteral();
 		}
 	}
