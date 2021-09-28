@@ -1,4 +1,4 @@
-package splittestplugin.handlers;
+package refactor.handlers;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -74,13 +74,14 @@ import visitors.TryStatementVisitor;
 import visitors.VariableDeclarationStatementVisitor;
 import visitors.WhileVisitor;
 
-public class SplitTestHandler extends AbstractHandler {
+//Classe principal para o plug-in de refatoramento
+public class RefactorHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Scanner s = new Scanner(System.in);
-		//String projectName = "TrackingThings1";
 		String projectName = "Exemplo";
 		String methodNameOriginal = s.nextLine();
+		//O plug-in recebe o numero correspondente ao statement inicial e ao statement final, e realiza o refatorramento nesse intervalo.
 		int start = s.nextInt() - 1;
 		int end = s.nextInt() - 1;
 		
@@ -94,10 +95,8 @@ public class SplitTestHandler extends AbstractHandler {
 			
 
 			IFolder folder = project.getFolder("test");
-			//IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(project.getFullPath().toString());
 			IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(folder);
 			IPackageFragment packageFragment = packageFragmenteRoot.createPackageFragment("exemplo", true, null);
-			//Classe
 			ICompilationUnit unit = packageFragment.getCompilationUnit("Example2.java");
 
 			ASTParser parser = ASTParser.newParser(AST.JLS14);
@@ -116,10 +115,7 @@ public class SplitTestHandler extends AbstractHandler {
 			ASTRewrite rewriter = ASTRewrite.create(ast);
 
 			TypeDeclaration typeDecl = (TypeDeclaration) astRoot.types().get(0);
-			ListRewrite listMethodRewrite = rewriter.getListRewrite(typeDecl,
-					TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
-			
-			//Talvez
+			ListRewrite listMethodRewrite = rewriter.getListRewrite(typeDecl, TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
 			for (int i = methods.size() - 1; i >= 0; i--) {
 				MethodDeclaration testMethod = methods.get(i);
 				String testName = testMethod.getName().toString();
@@ -127,11 +123,7 @@ public class SplitTestHandler extends AbstractHandler {
 				List<ASTNode> nodesA = new ArrayList<ASTNode>();
 				nodesA.add(testMethod.getBody());
 				Iterator<ASTNode> assertIt = nodesA.iterator();
-//							
-//				//Abordagem 1 
-////				int newMethodIndex = 0;
-//				
-				// Abordagem2
+				
 				MethodDeclaration newMethod = astRoot.getAST().newMethodDeclaration();
 				newMethod.setBody(astRoot.getAST().newBlock());
 				SingleVariableDeclaration p;
@@ -144,7 +136,6 @@ public class SplitTestHandler extends AbstractHandler {
 					p = (SingleVariableDeclaration) testMethod.parameters().get(pindex);
 					SingleVariableDeclaration np = astRoot.getAST().newSingleVariableDeclaration();
 					np.setInitializer(p.getInitializer());
-					//np.setType(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(p.getType().toString())));
 					if(p.getType().isPrimitiveType())
 						np.setType(astRoot.getAST().newPrimitiveType(((PrimitiveType) p.getType()).getPrimitiveTypeCode()));
 					else
@@ -255,11 +246,7 @@ public class SplitTestHandler extends AbstractHandler {
 					List<ASTNode> nodesOrdered = newTestNodes.stream().collect(Collectors.toList());
 					Collections.sort(nodesOrdered, (o1, o2) -> o1.getStartPosition() - o2.getStartPosition());
 					if (nodesOrdered.size() > 0) {
-						// Abordagem 1
-//						MethodDeclaration newMethod = astRoot.getAST().newMethodDeclaration();
-//						newMethod.setBody(astRoot.getAST().newBlock());
-//						newMethod.setConstructor(false);
-//						newMethod.setName(astRoot.getAST().newSimpleName(testName + "_" + newMethodIndex));
+						
 
 						Block block = newMethod.getBody();
 						ListRewrite listBlockRewrite = rewriter.getListRewrite(block, Block.STATEMENTS_PROPERTY);
@@ -268,13 +255,9 @@ public class SplitTestHandler extends AbstractHandler {
 							listBlockRewrite.insertLast(node, null);
 						}
 						
-						// Abordagem 1
-//						listMethodRewrite.insertLast(newMethod, null);					
-//						newMethodIndex++;						
+										
 					}
 				}
-				// Abordagem 2
-				//listMethodRewrite.insertLast(newMethod2, null);
 				listMethodRewrite.insertAfter(newMethod, testMethod, null);
 
 				// ---------------------------------

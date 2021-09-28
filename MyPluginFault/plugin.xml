@@ -141,7 +141,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="mypluginfault.handlers.SampleHandler"
+            class="mypluginfault.handlers.FaultHandler"
             commandId="MyPluginFault.commands.sampleCommand">
       </handler>
    </extension>

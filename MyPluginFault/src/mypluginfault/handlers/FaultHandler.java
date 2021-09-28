@@ -78,14 +78,12 @@ import visitors.TryStatementVisitor;
 import visitors.VariableDeclarationStatementVisitor;
 import visitors.WhileVisitor;
 
-public class SampleHandler extends AbstractHandler {
+public class FaultHandler extends AbstractHandler {
 	@SuppressWarnings("unchecked")
 	@Override
 	//Fault Type 1 = change return value, Fault Type 2 = remove last statement, if possible
-	//escolher local aleatorio para realizar a inserção.
+	//Classe principal do plug-in de inserção de faltas
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		//tratar throws
-		//tratar erro com entrada primitiva, tratar erro com override
 		Scanner s = new Scanner(System.in);
 		String projectName = "Exemplo";
 		System.out.println("Digite o Nome Do Metodo a ser alterado");
@@ -104,7 +102,6 @@ public class SampleHandler extends AbstractHandler {
 			
 
 			IFolder folder = project.getFolder("test");
-			//IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(project.getFullPath().toString());
 			IPackageFragmentRoot packageFragmenteRoot = jproject.getPackageFragmentRoot(folder);
 			IPackageFragment packageFragment = packageFragmenteRoot.createPackageFragment("exemplo", true, null);
 			//Classe
@@ -128,7 +125,6 @@ public class SampleHandler extends AbstractHandler {
 			TypeDeclaration typeDecl = (TypeDeclaration) astRoot.types().get(0);
 			ListRewrite listMethodRewrite = rewriter.getListRewrite(typeDecl,
 					TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
-			//Talvez
 			for (int i = methods.size() - 1; i >= 0; i--) {
 				MethodDeclaration testMethod = methods.get(i);
 				String testName = testMethod.getName().toString();
@@ -136,11 +132,7 @@ public class SampleHandler extends AbstractHandler {
 				List<ASTNode> nodesA = new ArrayList<ASTNode>();
 				nodesA.add(testMethod.getBody());
 				Iterator<ASTNode> assertIt = nodesA.iterator();
-//							
-//				//Abordagem 1 
-////				int newMethodIndex = 0;
-//				
-				// Abordagem2
+
 				MethodDeclaration newMethod = astRoot.getAST().newMethodDeclaration();
 				newMethod.setBody(astRoot.getAST().newBlock());
 				SingleVariableDeclaration p;
@@ -153,7 +145,6 @@ public class SampleHandler extends AbstractHandler {
 					p = (SingleVariableDeclaration) testMethod.parameters().get(pindex);
 					SingleVariableDeclaration np = astRoot.getAST().newSingleVariableDeclaration();
 					np.setInitializer(p.getInitializer());
-					//np.setType(astRoot.getAST().newSimpleType(astRoot.getAST().newSimpleName(p.getType().toString())));
 					if(p.getType().isPrimitiveType())
 						np.setType(astRoot.getAST().newPrimitiveType(((PrimitiveType) p.getType()).getPrimitiveTypeCode()));
 					else
@@ -264,16 +255,11 @@ public class SampleHandler extends AbstractHandler {
 					List<ASTNode> nodesOrdered = newTestNodes.stream().collect(Collectors.toList());
 					Collections.sort(nodesOrdered, (o1, o2) -> o1.getStartPosition() - o2.getStartPosition());
 					if (nodesOrdered.size() > 0) {
-						// Abordagem 1
-//						MethodDeclaration newMethod = astRoot.getAST().newMethodDeclaration();
-//						newMethod.setBody(astRoot.getAST().newBlock());
-//						newMethod.setConstructor(false);
-//						newMethod.setName(astRoot.getAST().newSimpleName(testName + "_" + newMethodIndex));
+						
 
 						Block block = newMethod.getBody();
 						ListRewrite listBlockRewrite = rewriter.getListRewrite(block, Block.STATEMENTS_PROPERTY);
-						//Talvez Expression, se não, utilizar toStrings
-						//Procurar no nó anterior ao return, instancias de variáveis utilizadas no return
+					
 						for (int nindex = 0;nindex < nodesOrdered.size();nindex++) {
 							if(fault != 2) {
 								listBlockRewrite.insertLast(nodesOrdered.get(nindex),null);
@@ -281,10 +267,8 @@ public class SampleHandler extends AbstractHandler {
 							else if(nindex < nodesOrdered.size() - 1) {
 							listBlockRewrite.insertLast(nodesOrdered.get(nindex), null);
 							}
-							//checar pela formatação de string se é declaration, se não, ir pra cima e checar se os filhos possuem return ou declaration
 							else if((nodesOrdered.get(nindex) instanceof ReturnStatement)) {
 								if(nodesOrdered.get(nindex-1) instanceof VariableDeclarationStatement) {
-									//testar declarações com qualificadores(this,super)
 									String fragment = ((VariableDeclarationStatement) nodesOrdered.get(nindex-1)).fragments().get(0).toString();
 									int fragi = fragment.indexOf("=");
 									String fragsub = fragment.substring(0, fragi);
@@ -298,17 +282,10 @@ public class SampleHandler extends AbstractHandler {
 								listBlockRewrite.insertLast(nodesOrdered.get(nindex), null);
 							}
 						}
-						//for (ASTNode node : nodesOrdered) {
-						//	listBlockRewrite.insertLast(node, null);
-						//}
-						
-						// Abordagem 1
-//						listMethodRewrite.insertLast(newMethod, null);					
-//						newMethodIndex++;						
+												
 					}
 				}
-				// Abordagem 2
-				//listMethodRewrite.insertLast(newMethod2, null);
+				
 				listMethodRewrite.insertAfter(newMethod, testMethod, null);
 
 				// ---------------------------------
